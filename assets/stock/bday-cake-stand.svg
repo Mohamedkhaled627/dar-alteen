@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" role="img" aria-label="قاعدة كيك خزفية بحافة ذهبية — صورة مؤقتة">
+  <rect width="1200" height="1500" fill="#241D14"/>
+  <rect x="40" y="40" width="1120" height="1420" fill="none" stroke="#352C20" stroke-width="2"/>
+  <g fill="none" stroke="#C9A45C" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M420 960h360"/>
+    <path d="M460 960c0 24 50 40 140 40s140-16 140-40" opacity=".6"/>
+    <path d="M560 1000v96c0 30-30 34-70 40h140c-40-6-70-10-70-40v-96" opacity=".5"/>
+    <path d="M420 1140h360"/>
+    <path d="M470 1140v-40M730 1140v-40" opacity=".6"/>
+    <path d="M470 1100c0-36 30-60 60-60s28 14 60 14 36-22 70-14c38 8 70 26 70 60" opacity=".7"/>
+    <path d="M600 1014v-28M600 986c-10-14-4-30 0-38 6 10 12 24 0 38Z"/>
+  </g>
+  <text x="600" y="1330" text-anchor="middle" fill="#C9A45C" font-family="IBM Plex Sans Arabic, Segoe UI, sans-serif" font-size="44" font-weight="600">قاعدة كيك خزفية بحافة ذهبية</text>
+  <text x="600" y="1390" text-anchor="middle" fill="#9C8F7D" font-family="IBM Plex Sans Arabic, Segoe UI, sans-serif" font-size="30">صورة مؤقتة — بتستبدل من لوحة الإدارة</text>
+</svg>

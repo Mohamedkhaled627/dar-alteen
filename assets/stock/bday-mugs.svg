@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" role="img" aria-label="طقم مجات مناسبات — صورة مؤقتة">
+  <rect width="1200" height="1500" fill="#241D14"/>
+  <rect x="40" y="40" width="1120" height="1420" fill="none" stroke="#352C20" stroke-width="2"/>
+  <g fill="none" stroke="#C9A45C" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M470 620h140v300a60 60 0 0 1-60 60h-20a60 60 0 0 1-60-60v-300Z"/>
+    <path d="M610 680h40a44 44 0 0 1 0 88h-40"/>
+    <path d="M780 720h130v260a50 50 0 0 1-50 50h-30a50 50 0 0 1-50-50v-260Z"/>
+    <path d="M910 770h34a38 38 0 0 1 0 76h-34"/>
+    <path d="M500 700v40M550 700v40" opacity=".7"/>
+    <path d="M815 800v36M860 800v36" opacity=".7"/>
+    <ellipse cx="600" cy="1160" rx="290" ry="16" opacity=".5"/>
+  </g>
+  <text x="600" y="1330" text-anchor="middle" fill="#C9A45C" font-family="IBM Plex Sans Arabic, Segoe UI, sans-serif" font-size="44" font-weight="600">طقم مجات مناسبات</text>
+  <text x="600" y="1390" text-anchor="middle" fill="#9C8F7D" font-family="IBM Plex Sans Arabic, Segoe UI, sans-serif" font-size="30">صورة مؤقتة — بتستبدل من لوحة الإدارة</text>
+</svg>

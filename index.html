@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دار الطين — خزف وديكور منزلي</title>
+<meta name="description" content="دار الطين: أكواب ومجات وتابلوهات وصواني وبراويز مختارة بعناية. صور وسعر وتفاصيل واضحة، والطلب مباشرة عبر واتساب.">
+<meta name="theme-color" content="#161210">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="دار الطين">
+<meta property="og:locale" content="ar_EG">
+<meta property="og:title" content="دار الطين — خزف وديكور منزلي">
+<meta property="og:description" content="أكواب ومجات وتابلوهات وصواني وبراويز مختارة بعناية. شوف الصور والسعر والتفاصيل، واطلب مباشرة عبر واتساب.">
+<meta property="og:image" content="assets/stock/hero.jpg">
+<meta property="og:image:alt" content="أيدٍ تشكّل الفخار على العجلة داخل ورشة خزف">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="دار الطين — خزف وديكور منزلي">
+<meta name="twitter:description" content="أكواب ومجات وتابلوهات وصواني وبراويز مختارة بعناية. الطلب مباشرة عبر واتساب.">
+<meta name="twitter:image" content="assets/stock/hero.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* OD-LAYOUT-PRIMITIVES v1 — structure only: display, flex/grid, overflow, wrapping, ratio, geometry.
+   Put this @layer first; product CSS outside the layer wins ordinary layout rules.
+   Native hidden and closed-dialog states take precedence over component display rules. */
+@layer od-layout {
+  [hidden]:not([hidden="until-found" i]) { display: none !important; }
+  dialog:not([open]) { display: none !important; }
+
+  :where(.od-stack,.od-row,.od-row-top,.od-cluster,.od-grid,.od-field,.od-stat,.od-cell,.od-tile) > :where(*) { min-width: 0; }
+
+  /* containers */
+  .od-stack   { display: flex; flex-direction: column; gap: var(--od-gap, 8px); }
+  .od-row     { display: flex; align-items: center; gap: var(--od-gap, 8px); }
+  .od-row-top { display: flex; align-items: flex-start; gap: var(--od-gap, 8px); }
+  .od-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--od-gap, 8px); }
+  .od-fill    { flex: 1 1 0; min-width: 0; }
+  .od-fixed   { flex: none; }
+  .od-grid    { display: grid; gap: var(--od-gap, 12px); grid-template-columns: repeat(var(--od-cols, 3), minmax(0, 1fr)); }
+
+  /* stacked information: each piece is its own line — never sibling inline spans */
+  .od-stat, .od-field, .od-cell { display: grid; gap: var(--od-gap, 2px); }
+  :where(.od-stat,.od-field,.od-cell) > :where(*) { display: block; }
+  .od-tile { display: grid; grid-template-rows: auto 1fr; }
+  :where(.od-tile) > :where(*) { display: block; }
+
+  /* media keeps its intrinsic ratio by default; never a distorted or cropped
+     cover by accident. height:auto lets the ratio win over an <img height="…">
+     attribute. Cropping to a uniform box is an explicit opt-in: set --od-ratio
+     AND add .od-media-cover together (per the core rule, only where a crop is
+     deliberate — tile thumbs, decorative fills — never on full-frame content). */
+  .od-media { display: block; width: 100%; height: auto; aspect-ratio: var(--od-ratio, auto); }
+  .od-media-cover { object-fit: cover; }
+
+  /* functional inline SVG icons opt into bounded geometry; content SVGs keep their own */
+  .od-icon { display: inline-block; inline-size: var(--od-icon-size, 1em); block-size: var(--od-icon-size, 1em); flex: none; }
+
+  /* data text only — authored copy is rewritten to its budget instead */
+  .od-truncate { display: block; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .od-clamp-2, .od-clamp-3 { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+  .od-clamp-2 { -webkit-line-clamp: 2; }
+  .od-clamp-3 { -webkit-line-clamp: 3; }
+  .od-lines-2 { min-height: calc(2 * 1.4em); }   /* block-level reservation for a shared baseline */
+  .od-nowrap  { white-space: nowrap; }           /* 数字+单位 · 价格+起 · 日期+星期 */
+  .od-keep    { word-break: keep-all; overflow-wrap: anywhere; } /* CJK labels break at spaces / <wbr> first */
+
+  /* screen skeleton (optional): bars take their own space, the middle scrolls — no padding guessed for chrome */
+  .od-screen { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100%; }
+  .od-scroll { overflow-y: auto; overscroll-behavior: contain; min-height: 0; }
+
+  /* horizontal rail: the next item peeks at the edge; trailing room survives overflow */
+  .od-rail { display: flex; gap: var(--od-gap, 8px); overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
+             padding-inline: var(--od-rail-pad, 16px); scroll-padding-inline: var(--od-rail-pad, 16px); }
+  .od-rail::-webkit-scrollbar { display: none; }
+  :where(.od-rail) > :where(*) { flex: none; scroll-snap-align: start; }
+  :where(.od-rail) > :where(:last-child) { margin-inline-end: var(--od-rail-pad, 16px); }
+
+  .od-spacer { flex: none; visibility: hidden; pointer-events: none; }
+  .od-touch  { min-width: 44px; min-height: 44px; }
+}
+:root [hidden]:where(:not([hidden="until-found" i])) { display: none; }
+/* /OD-LAYOUT-PRIMITIVES v1 */
+</style>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">تخطَّ إلى المحتوى</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <button class="brand" type="button" data-nav="home" aria-label="دار الطين — الصفحة الرئيسية">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" focusable="false">
+          <path d="M11 5h10l-1.1 4.3c2.9 1.7 4.6 4.5 4.6 7.9 0 5.1-3.7 9.8-8.5 9.8s-8.5-4.7-8.5-9.8c0-3.4 1.7-6.2 4.6-7.9L11 5Z" fill="currentColor"/>
+          <ellipse cx="16" cy="5.6" rx="5" ry="1.5" fill="#F3ECDF" opacity=".55"/>
+        </svg>
+      </span>
+      <span class="brand-name">دار الطين</span>
+    </button>
+
+    <nav class="main-nav" aria-label="التنقل الرئيسي">
+      <button type="button" class="nav-link" data-nav="home" aria-current="page">الرئيسية</button>
+      <button type="button" class="nav-link" data-nav="shop">المتجر</button>
+      <button type="button" class="nav-link" data-nav="about">من نحن</button>
+    </nav>
+
+    <div class="header-actions">
+      <button class="header-shop" type="button" data-nav="shop">المتجر</button>
+      <a class="btn btn-wa btn-sm" data-wa-link href="#" target="_blank" rel="noopener" aria-label="تواصل عبر واتساب">
+        <svg class="od-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+        <span>واتساب</span>
+      </a>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="فتح القائمة">
+        <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <nav aria-label="قائمة الجوال">
+      <button type="button" class="nav-link" data-nav="home">الرئيسية</button>
+      <button type="button" class="nav-link" data-nav="shop">المتجر</button>
+      <button type="button" class="nav-link" data-nav="about">من نحن</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+  <section class="view" id="view-home" aria-labelledby="home-title">
+    <div class="hero">
+      <div class="container">
+        <div class="hero-panel">
+          <img class="hero-img" src="assets/stock/hero.jpg" width="1280" height="853" alt="أيدٍ تشكّل الفخار على العجلة داخل ورشة خزف" fetchpriority="high" decoding="async">
+          <div class="hero-copy">
+            <p class="eyebrow eyebrow-inverse">خزف وديكور منزلي</p>
+            <h1 id="home-title" tabindex="-1">لمسة حِرَفية على كل ركن في بيتك</h1>
+            <p class="hero-lead">أكواب وتابلوهات وصواني وبراويز مختارة بعناية، وقطع جاهزة للأفراح وأعياد الميلاد. شوف الصور والسعر والتفاصيل، واطلب مباشرة عبر واتساب.</p>
+            <div class="hero-actions">
+              <button class="btn btn-primary" type="button" data-nav="shop">
+                تسوّق المنتجات
+                <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>
+              </button>
+              <button class="btn btn-hero-ghost" type="button" data-nav="about">تعرّف علينا</button>
+            </div>
+            <p class="hero-caption" id="hero-caption" hidden></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="section" aria-labelledby="cat-title">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">تصفّح حسب النوع</p>
+            <h2 id="cat-title">ست عائلات من القطع</h2>
+          </div>
+        </div>
+        <div class="category-grid">
+          <button class="category-tile" type="button" data-cat-goto="mugs">
+            <span class="category-media" data-cat-media="mugs" aria-hidden="true">
+              <img alt="" loading="lazy" decoding="async" hidden>
+              <span class="category-fallback" hidden>
+                <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M5 8h11v7a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5V8Z"/><path d="M16 9h2.3a2.7 2.7 0 0 1 0 5.4H16"/></svg>
+              </span>
+            </span>
+            <span class="category-body">
+              <span class="category-name">أكواب ومجات</span>
+              <span class="category-count" data-cat-count="mugs">—</span>
+            </span>
+          </button>
+          <button class="category-tile" type="button" data-cat-goto="art">
+            <span class="category-media" data-cat-media="art" aria-hidden="true">
+              <img alt="" loading="lazy" decoding="async" hidden>
+              <span class="category-fallback" hidden>
+                <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="m7.5 15.5 3-3 2.5 2.5 2-2 2.5 2.5"/><circle cx="9" cy="9.3" r="1"/></svg>
+              </span>
+            </span>
+            <span class="category-body">
+              <span class="category-name">تابلوهات</span>
+              <span class="category-count" data-cat-count="art">—</span>
+            </span>
+          </button>
+          <button class="category-tile" type="button" data-cat-goto="trays">
+            <span class="category-media" data-cat-media="trays" aria-hidden="true">
+              <img alt="" loading="lazy" decoding="async" hidden>
+              <span class="category-fallback" hidden>
+                <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><ellipse cx="12" cy="9.5" rx="8" ry="3"/><path d="M4 9.5v3.2c0 2 3.6 3.6 8 3.6s8-1.6 8-3.6V9.5"/></svg>
+              </span>
+            </span>
+            <span class="category-body">
+              <span class="category-name">صواني</span>
+              <span class="category-count" data-cat-count="trays">—</span>
+            </span>
+          </button>
+          <button class="category-tile" type="button" data-cat-goto="frames">
+            <span class="category-media" data-cat-media="frames" aria-hidden="true">
+              <img alt="" loading="lazy" decoding="async" hidden>
+              <span class="category-fallback" hidden>
+                <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><rect x="4" y="4" width="16" height="16" rx="1.5"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>
+              </span>
+            </span>
+            <span class="category-body">
+              <span class="category-name">براويز</span>
+              <span class="category-count" data-cat-count="frames">—</span>
+            </span>
+          </button>
+          <button class="category-tile" type="button" data-cat-goto="weddings">
+            <span class="category-media" data-cat-media="weddings" aria-hidden="true">
+              <img alt="" loading="lazy" decoding="async" hidden>
+              <span class="category-fallback" hidden>
+                <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="9.2" cy="14" r="5.2"/><circle cx="14.8" cy="14" r="5.2"/><path d="m9.2 8.8-1.4-1.5 1.4-1.5 1.4 1.5Z"/></svg>
+              </span>
+            </span>
+            <span class="category-body">
+              <span class="category-name">أفراح</span>
+              <span class="category-count" data-cat-count="weddings">—</span>
+            </span>
+          </button>
+          <button class="category-tile" type="button" data-cat-goto="birthdays">
+            <span class="category-media" data-cat-media="birthdays" aria-hidden="true">
+              <img alt="" loading="lazy" decoding="async" hidden>
+              <span class="category-fallback" hidden>
+                <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M5 20h14"/><path d="M6 20v-6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v6"/><path d="M9 16.2v.8"/><path d="M12 16.2v.8"/><path d="M15 16.2v.8"/><path d="M9 11.8V9.8"/><path d="M12 11.8V9.8"/><path d="M15 11.8V9.8"/></svg>
+              </span>
+            </span>
+            <span class="category-body">
+              <span class="category-name">أعياد الميلاد</span>
+              <span class="category-count" data-cat-count="birthdays">—</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight" aria-labelledby="feat-title">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">مختارات من المتجر</p>
+            <h2 id="feat-title">قطع تستحق نظرة أطول</h2>
+          </div>
+          <button class="text-link" type="button" data-nav="shop">
+            كل المنتجات
+            <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>
+          </button>
+        </div>
+        <div class="product-grid" id="featured-grid"></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="steps-title">
+      <div class="container steps-layout">
+        <div class="steps-intro">
+          <p class="eyebrow">أبسط مما تتوقع</p>
+          <h2 id="steps-title">إزاي تطلب قطعتك؟</h2>
+          <p class="steps-lead">تلات خطوات قصيرة، ومن غير حساب ولا عربة شراء.</p>
+          <button class="text-link" type="button" data-nav="shop">
+            ابدأ من المتجر
+            <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>
+          </button>
+        </div>
+        <ol class="steps-grid">
+          <li class="step">
+            <span class="step-num" aria-hidden="true">01</span>
+            <h3>اختار القطعة</h3>
+            <p>تصفّح حسب النوع أو ابحث باسم المنتج.</p>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">02</span>
+            <h3>راجع التفاصيل</h3>
+            <p>شوف الصور والمقاسات والسعر قبل أي خطوة.</p>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">03</span>
+            <h3>اطلب على واتساب</h3>
+            <p>ابعت اسم القطعة والكمية، وهنأكد معاك الباقي.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="container">
+      <section class="craft-band" aria-labelledby="craft-title">
+        <div class="craft-copy">
+          <p class="eyebrow eyebrow-inverse">قبل ما تقرر</p>
+          <h2 id="craft-title">بنخليك تشوف القطعة قبل ما تطلب</h2>
+        </div>
+        <ul class="craft-list">
+          <li>تفاصيل ومقاسات مكتوبة لكل قطعة</li>
+          <li>سعر واضح من غير مفاجآت</li>
+          <li>تواصل مباشر مع المورّد</li>
+        </ul>
+        <button class="btn btn-light" type="button" data-nav="shop">ابدأ من المتجر</button>
+      </section>
+    </div>
+  </section>
+
+  <section class="view" id="view-shop" aria-labelledby="shop-title" hidden>
+    <div class="container page-head">
+      <p class="eyebrow">المتجر</p>
+      <h1 id="shop-title" tabindex="-1">كل المنتجات</h1>
+      <p class="page-lead">اختار من الأكواب والمجات والتابلوهات والصواني والبراويز وقطع الأفراح وأعياد الميلاد. كل قطعة بصورة وسعر وتفاصيل، والطلب عبر واتساب.</p>
+    </div>
+
+    <div class="container">
+      <div class="shop-toolbar">
+        <div class="field">
+          <label for="search-input">ابحث في المنتجات</label>
+          <input id="search-input" type="search" placeholder="مثال: مج، تابلوه، صينية" autocomplete="off">
+        </div>
+        <div class="field field-sort">
+          <label for="sort-select">الترتيب</label>
+          <select id="sort-select">
+            <option value="featured">المختارات أولًا</option>
+            <option value="price-asc">السعر: من الأقل</option>
+            <option value="price-desc">السعر: من الأعلى</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="chip-row" role="group" aria-label="تصفية حسب النوع">
+        <button class="chip" type="button" data-cat-filter="all" aria-pressed="true">الكل</button>
+        <button class="chip" type="button" data-cat-filter="mugs" aria-pressed="false">أكواب ومجات</button>
+        <button class="chip" type="button" data-cat-filter="art" aria-pressed="false">تابلوهات</button>
+        <button class="chip" type="button" data-cat-filter="trays" aria-pressed="false">صواني</button>
+        <button class="chip" type="button" data-cat-filter="frames" aria-pressed="false">براويز</button>
+        <button class="chip" type="button" data-cat-filter="weddings" aria-pressed="false">أفراح</button>
+        <button class="chip" type="button" data-cat-filter="birthdays" aria-pressed="false">أعياد الميلاد</button>
+      </div>
+
+      <p class="results-count" id="results-count" aria-live="polite"></p>
+      <div class="product-grid" id="shop-grid"></div>
+
+      <div class="empty-state" id="shop-empty" hidden>
+        <span class="empty-icon" aria-hidden="true">
+          <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+        </span>
+        <h2 id="empty-title">مفيش نتائج مطابقة</h2>
+        <p id="empty-text">جرّب كلمة تانية أو ارجع لكل المنتجات.</p>
+        <button class="btn btn-outline" type="button" id="reset-filters">اعرض كل المنتجات</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-product" aria-labelledby="detail-name" hidden>
+    <div class="container">
+      <button class="back-link" type="button" id="detail-back">
+        <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>
+        رجوع للمتجر
+      </button>
+
+      <div class="detail-grid">
+        <div class="detail-media-wrap">
+          <figure class="detail-media">
+            <img id="detail-img" src="assets/stock/hero.jpg" alt="" width="1200" height="800" decoding="async">
+          </figure>
+          <div class="detail-thumbs" id="detail-thumbs" role="group" aria-label="صور المنتج" hidden></div>
+        </div>
+
+        <div class="detail-info">
+          <p class="eyebrow" id="detail-cat"></p>
+          <h1 id="detail-name" tabindex="-1"></h1>
+          <p class="detail-price od-nowrap" id="detail-price"></p>
+          <p class="detail-desc" id="detail-desc"></p>
+
+          <dl class="specs" id="detail-specs"></dl>
+
+          <div class="buy-row">
+            <div class="qty-block">
+              <span class="qty-label" id="qty-label">الكمية</span>
+              <div class="qty" role="group" aria-labelledby="qty-label">
+                <button id="qty-minus" type="button" aria-label="تقليل الكمية">
+                  <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/></svg>
+                </button>
+                <span class="qty-value" id="qty-value" aria-live="polite">1</span>
+                <button id="qty-plus" type="button" aria-label="زيادة الكمية">
+                  <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="od-stat total" aria-live="polite">
+              <span>الإجمالي</span>
+              <strong class="od-nowrap" id="detail-total"></strong>
+            </div>
+          </div>
+
+          <a class="btn btn-primary btn-block" id="detail-wa" href="#" target="_blank" rel="noopener">
+            <svg class="od-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+            اطلب عبر واتساب
+          </a>
+          <p class="detail-note">هنأكد معاك التوفر وطريقة التوصيل على واتساب قبل الشحن.</p>
+          <ul class="buy-trust" id="detail-trust" aria-label="معلومات الطلب"></ul>
+        </div>
+      </div>
+
+      <section class="similar" id="similar-section" aria-labelledby="similar-title" hidden>
+        <div class="section-head">
+          <h2 id="similar-title">قطع من نفس العائلة</h2>
+        </div>
+        <div class="product-grid" id="similar-grid"></div>
+      </section>
+    </div>
+  </section>
+
+  <section class="view" id="view-about" aria-labelledby="about-title" hidden>
+    <div class="container page-head">
+      <p class="eyebrow">من نحن</p>
+      <h1 id="about-title" tabindex="-1">حكايتنا مع الطين</h1>
+    </div>
+
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-copy">
+          <figure class="about-media">
+            <img src="assets/stock/mug-set.jpg" width="1200" height="800" alt="مجات خزفية خام وأدوات تلوين على طاولة بيضاء" loading="lazy" decoding="async">
+          </figure>
+          <p>دار الطين مساحة صغيرة بدأت من حب الخزف وتفاصيل البيت. بنختار القطع واحدة واحدة، ونهتم إن كل قطعة توصل لك بشكل يليق بيها.</p>
+          <p>كل قطعة بتظهر بصورتها الحقيقية، ولو عندك سؤال عن مقاس أو لون أو توفر، تواصل معانا مباشرة على واتساب.</p>
+        </div>
+
+        <aside class="contact-card" aria-labelledby="contact-title">
+          <h2 id="contact-title">تواصل مع المورّد</h2>
+          <p class="contact-lead">للطلب أو السؤال عن أي قطعة، ابعتلنا رسالة واتساب وهنرد عليك في أقرب وقت.</p>
+
+          <div class="contact-line">
+            <span class="contact-label">رقم الهاتف</span>
+            <a id="contact-phone" href="#" dir="ltr">0100 000 0000</a>
+          </div>
+
+          <a class="btn btn-primary btn-block" id="contact-wa" data-wa-link href="#" target="_blank" rel="noopener">
+            <svg class="od-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+            افتح محادثة واتساب
+          </a>
+
+          <p class="contact-note">الرسالة بتوصل للمورّد مباشرة، من غير وسيط.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <span class="brand-name">دار الطين</span>
+      <p>خزف وديكور منزلي مختار بعناية — تفاصيل واضحة، وطلب مباشر عبر واتساب.</p>
+    </div>
+    <nav class="footer-nav" aria-label="روابط الموقع">
+      <h2>الموقع</h2>
+      <button type="button" class="footer-link" data-nav="home">الرئيسية</button>
+      <button type="button" class="footer-link" data-nav="shop">المتجر</button>
+      <button type="button" class="footer-link" data-nav="about">من نحن</button>
+    </nav>
+    <div class="footer-contact">
+      <h2>للتواصل</h2>
+      <a id="footer-phone" href="#" dir="ltr">0100 000 0000</a>
+      <a class="footer-link" data-wa-link href="#" target="_blank" rel="noopener">واتساب المورّد</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p>© <span id="year">2026</span> دار الطين. جميع الحقوق محفوظة.</p>
+  </div>
+</footer>
+
+<div class="mobile-buy" id="mobile-buy" hidden>
+  <div class="container mobile-buy-inner">
+    <div class="mobile-buy-total">
+      <span>الإجمالي</span>
+      <strong class="od-nowrap" id="mobile-buy-price"></strong>
+    </div>
+    <a class="btn btn-primary" id="mobile-buy-wa" href="#" target="_blank" rel="noopener">
+      <svg class="od-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+      اطلب عبر واتساب
+    </a>
+  </div>
+</div>
+
+<noscript>
+  <p class="noscript-note">المتجر يحتاج تشغيل JavaScript لعرض المنتجات والتنقل بين الصفحات.</p>
+</noscript>
+
+<script src="store-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
