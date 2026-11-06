@@ -986,24 +986,151 @@ form.addEventListener("submit", async function (event) {
   }
 });
 
-// نشر للزوار: تنزيل catalog.json بآخر نسخة الكتالوج — المستخدم يحطه في فولدر الموقع ويعمل نشر
-exportButton.addEventListener("click", function () {
-  var payload = {
+// ===== النشر للزوار: رفع catalog.json على GitHub Pages مباشرة من اللوحة =====
+const PUBLISH_TOKEN_KEY = "dar-alteen-publish-token";
+const PUBLISH_URL = "https://api.github.com/repos/Mohamedkhaled627/dar-alteen/contents/catalog.json";
+
+const publishDialog = document.getElementById("publish-dialog");
+const publishRender = document.getElementById("publish-token-form");
+const publishRemoveForm = document.getElementById("publish-remove");
+const publishTokenInput = document.getElementById("publish-token");
+const publishSaveButton = document.getElementById("publish-save");
+const exportCatalogLabel = document.getElementById("export-catalog-label");
+
+function getPublishToken() {
+  try { return window.localStorage.getItem(PUBLISH_TOKEN_KEY) || ""; } catch (error) { return ""; }
+}
+
+function setPublishToken(value) {
+  try {
+    if (value) window.localStorage.setItem(PUBLISH_TOKEN_KEY, value.trim());
+    else window.localStorage.removeItem(PUBLISH_TOKEN_KEY);
+  } catch (error) { /* الجدولة تلتزم — Toast بيعرض خيارات اليدوي */ }
+}
+
+function toBase64Utf8(text) {
+  return window.btoa(window.unescape(window.encodeURIComponent(text)));
+}
+
+function openPublishDialog() {
+  if (getPublishToken()) {
+    publishRender.hidden = true;
+    publishRemoveForm.hidden = false;
+  } else {
+    publishRender.hidden = false;
+    publishRemoveForm.hidden = true;
+    publishTokenInput.value = "";
+  }
+  publishDialog.showModal();
+}
+
+function buildCatalogPayload() {
+  return JSON.stringify({
     version: Date.now(),
     generated: new Date().toISOString(),
     products: catalog
-  };
-  var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-  var url = URL.createObjectURL(blob);
-  var link = document.createElement("a");
+  }, null, 2);
+}
+
+// fallback يدوي: تنزيل catalog.json — المستخدم يحطه في فولدر الموقع ويشغّل publish.ps1
+function downloadCatalog() {
+  const blob = new Blob([buildCatalogPayload()], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
   link.href = url;
   link.download = "catalog.json";
   document.body.appendChild(link);
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
-  showToast("نزّلت catalog.json — حطه في فولدر الموقع وشغّل publish.ps1 (أو اطلب النشر).");
+  showToast("نزّلت catalog.json — حطه في فولدر الموقع وشغّل publish.ps1 (اعمل git pull الأول لو استخدمت النشر التلقائي قبل كده).");
+}
+
+async function publishCatalogToGitHub(token) {
+  exportButton.disabled = true;
+  exportCatalogLabel.textContent = "بيبعت…";
+  try {
+    const apiHeaders = { Authorization: "Bearer " + token, Accept: "application/vnd.github+json" };
+
+    // SHA للملف الحالي (لو موجود) — GitHub بيرفض تحديث ملف من غيرها
+    let sha = "";
+    const head = await fetch(PUBLISH_URL + "?ref=main", { headers: apiHeaders });
+    if (head.ok) sha = (await head.json()).sha || "";
+    else if (head.status !== 404) throw new Error("GitHub حالة " + head.status);
+
+    const res = await fetch(PUBLISH_URL, {
+      method: "PUT",
+      headers: Object.assign({ "Content-Type": "application/json" }, apiHeaders),
+      body: JSON.stringify({
+        message: "publish: نشر كتالوج الزوار",
+        content: toBase64Utf8(buildCatalogPayload()),
+        branch: "main",
+        sha: sha || undefined
+      })
+    });
+
+    if (res.ok) {
+      showToast("اتنشر ✅ الموقع هيتحدّث خلال دقيقة تقريبًا.");
+      setPublishToken(token);
+      exportCatalogLabel.textContent = "أنشر للزوار";
+    } else if (res.status === 401 || res.status === 403) {
+      showToast("التوكن مش صالح أو منتهي أو مش مصرّح مستودع كافي. عدّله وحاول تاني.", true);
+      setPublishToken("");
+      openPublishDialog();
+    } else {
+      showToast("GitHub رفض النشر (حالة " + res.status + "). جرّب تاني أو استخدم التنزيل اليدوي.", true);
+      openPublishDialog();
+    }
+  } catch (error) {
+    showToast("مش قادر أوصل GitHub (شبكة أو حظر). جرب تاني أو استخدم التنزيل اليدوي.", true);
+    openPublishDialog();
+  } finally {
+    exportButton.disabled = false;
+    exportCatalogLabel.textContent = "أنشر للزوار";
+  }
+}
+
+// نشر للزوار: توكن محفوظ → رفع مباشر؛ مفيش → شاشة ربط التوكن (لو المستخدم ما يقطرش التوكن بتنزيل يدوي)
+exportButton.addEventListener("click", function () {
+  const saved = getPublishToken();
+  if (saved) publishCatalogToGitHub(saved);
+  else {
+    openPublishDialog();
+    publishDialog.returnValue = "download";
+  }
 });
+
+publishRender.addEventListener("submit", function (event) {
+  event.preventDefault();
+  const token = publishTokenInput.value.trim();
+  if (!token) {
+    // من غير توكن: نفس الزر بينزّل الملف يدوي — fallback مضمون
+    downloadCatalog();
+    return;
+  }
+  publishCatalogToGitHub(token).then(function () {
+    publishSaveButton.disabled = false;
+    if (publishDialog.open) publishDialog.close();
+  });
+});
+
+publishRemoveForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+  if (event.submitter && event.submitter.id === "clear-publish-token") {
+    setPublishToken("");
+    showToast("التوكن اتشال من الجهاز ده.");
+    publishDialog.close();
+    downloadCatalog();
+  } else {
+    openPublishDialog();
+  }
+});
+
+publishTokenInput.value = "";
+document.getElementById("publish-cancel").addEventListener("click", function () {
+  publishDialog.close();
+});
+
 
 resetButton.addEventListener("click", function () {
   askConfirm(

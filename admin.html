@@ -88,9 +88,9 @@
         <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 4v5h5"/><path d="M4.6 13a8 8 0 1 0 1.9-6.4L4 9"/></svg>
         <span class="btn-label">استرجاع الأصلي</span>
       </button>
-      <button class="btn btn-outline btn-sm" id="export-catalog" type="button" aria-label="تصدير الكتالوج للنشر">
+      <button class="btn btn-outline btn-sm" id="export-catalog" type="button" aria-label="نشر منتجاتك للزوار على الموقع">
         <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
-        <span class="btn-label">نشر للزوار</span>
+        <span class="btn-label" id="export-catalog-label">أنشر للزوار</span>
       </button>
       <button class="btn btn-ghost btn-sm" id="change-password" type="button" hidden>
         <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
@@ -364,6 +364,31 @@
       <button class="btn btn-outline" type="button" id="confirm-cancel">إلغاء</button>
       <button class="btn btn-danger" type="button" id="confirm-ok">تأكيد</button>
     </div>
+  </div>
+</dialog>
+
+<dialog id="publish-dialog" class="admin-dialog auth-dialog" aria-labelledby="publish-title">
+  <div class="auth-body">
+    <p class="eyebrow">دار الطين</p>
+    <h2 id="publish-title">ربط النشر التلقائي</h2>
+    <p class="field-hint" id="publish-token-hint">لوحة التحكم هترفع منتجاتك على GitHub مباشرة عشان تظهر للزوار فورًا. محتاج توكن GitHub (توكن Fine-grained) مصرّح للمستودع <em>dar-alteen</em> بصلاحية Contents: Read and write — ده التوكن الأضيق الممكن. التوكن بيتخزن على جهازك أنت بس.</p>
+    <form id="publish-token-form" novalidate>
+      <label class="field" for="publish-token">
+        <span class="field-label">توكين النشر</span>
+        <input id="publish-token" type="password" autocomplete="off" aria-describedby="publish-token-hint">
+      </label>
+      <div class="dialog-actions">
+        <button class="btn btn-outline" type="button" id="publish-cancel">إلغاء</button>
+        <button class="btn btn-primary" type="submit" id="publish-save">حفظ التوكن وارفع المنتجات</button>
+      </div>
+    </form>
+    <form id="publish-remove" hidden novalidate>
+      <p class="field-hint">فيه توكن محفوظ على الجهاز ده. تقدر تحدّده أو تشيله — من غير توكن، النشر يبقى يدوي بالنزّل ملف وتشغّل publish.ps1.</p>
+      <div class="dialog-actions">
+        <button class="btn btn-outline" type="submit" id="clear-publish-token">تشيل التوكن</button>
+        <button class="btn btn-primary" type="submit" id="publish-again">حفظ توكن جديد وارفع</button>
+      </div>
+    </form>
   </div>
 </dialog>
 
