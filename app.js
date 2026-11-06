@@ -1,7 +1,7 @@
 const STORE = {
   name: "دار الطين",
-  phoneDisplay: "0100 000 0000",
-  waNumber: "201000000000",
+  phoneDisplay: "0103 482 2036",
+  waNumber: "201034822036",
   heroCaption: "",
   trust: [
     { icon: "truck", title: "الشحن", text: "التفاصيل النهائية على واتساب" },
@@ -28,229 +28,10 @@ const TITLES = {
 
 const MAX_QTY = 10;
 
-const fallbackProducts = [
-  {
-    id: "mug-speckled",
-    name: "مج فخار مرقّط",
-    cat: "mugs",
-    price: 240,
-    img: "assets/stock/mug-speckled.jpg",
-    alt: "مج فخار مرقّط مملوء بالقهوة على فراش ناعم",
-    w: 1200,
-    h: 1800,
-    featured: true,
-    desc: "مج من الفخار المرقّط بلمسة طبيعية دافئة، مناسب للقهوة الصباحية أو كوب الشاي في نص اليوم. المقبض مريح والجسم متوازن في اليد.",
-    specs: [
-      { label: "الخامة", value: "فخار مصقول" },
-      { label: "السعة", value: "350 مل" },
-      { label: "العناية", value: "غسيل يدوي بماء فاتر" }
-    ]
-  },
-  {
-    id: "mug-black",
-    name: "مج سيراميك أسود مطفي",
-    cat: "mugs",
-    price: 210,
-    img: "assets/stock/mug-black.jpg",
-    alt: "مج سيراميك أسود مطفي على طاولة خشبية في مطبخ مضيء",
-    w: 1200,
-    h: 1800,
-    desc: "سيراميك أسود بلمسة مطفية ومقبض مريح، يليق بقهوة الصباح أو مشروب دافئ في المسا. لونه الحيادي يمشي مع أي طاولة.",
-    specs: [
-      { label: "الخامة", value: "سيراميك مطفي" },
-      { label: "السعة", value: "300 مل" },
-      { label: "العناية", value: "آمن لغسالة الأطباق" }
-    ]
-  },
-  {
-    id: "mug-set",
-    name: "طقم تزيين المجات — 4 قطع",
-    cat: "mugs",
-    price: 680,
-    img: "assets/stock/mug-set.jpg",
-    alt: "مجات خزفية خام مع أدوات وألوان تزيين على طاولة بيضاء",
-    w: 1200,
-    h: 800,
-    desc: "أربع مجات خزفية خام مع أدوات تلوين، لتجربة ممتعة تصنع فيها قطعتك بنفسك أو تشاركها مع العيلة والأصحاب.",
-    specs: [
-      { label: "المحتوى", value: "4 مجات + فرش وألوان" },
-      { label: "السعة", value: "350 مل للمج" },
-      { label: "العناية", value: "غسيل يدوي بعد التلوين" }
-    ]
-  },
-  {
-    id: "cup-printed",
-    name: "مج بزخرفة نباتية عتيقة",
-    cat: "mugs",
-    price: 265,
-    img: "assets/stock/cup-printed.jpg",
-    alt: "مجات ومزهريات خزفية بزخارف نباتية على قماش مطبوع",
-    w: 1200,
-    h: 800,
-    desc: "مج بطبعة نباتية هادئة مستوحاة من القطع العتيقة، يضيف دفء لطاولة القهوة من غير ما يزحم المكان.",
-    specs: [
-      { label: "الخامة", value: "سيراميك" },
-      { label: "السعة", value: "300 مل" },
-      { label: "العناية", value: "غسيل يدوي" }
-    ]
-  },
-  {
-    id: "cup-tea",
-    name: "طقم كوبين شاي بورسلين",
-    cat: "mugs",
-    price: 320,
-    img: "assets/stock/cup-tea.jpg",
-    alt: "كوبان من البورسلين الأبيض على صحنين زجاجيين",
-    w: 1200,
-    h: 1800,
-    desc: "كوبان من البورسلين الأبيض بقاعدة أنيقة، للشاي والضيافة اليومية. خفيفين في الإيد وسهلين في التقديم.",
-    specs: [
-      { label: "المحتوى", value: "كوبان + صحنان" },
-      { label: "السعة", value: "200 مل للكوب" },
-      { label: "الخامة", value: "بورسلين" }
-    ]
-  },
-  {
-    id: "cup-turkish",
-    name: "فنجان قهوة تركية",
-    cat: "mugs",
-    price: 185,
-    img: "assets/stock/cup-turkish.jpg",
-    alt: "فنجان قهوة تركية من البورسلين على طاولة",
-    w: 1280,
-    h: 854,
-    desc: "فنجان بورسلين كلاسيكي بخطوط بسيطة، للقهوة التركية على أصولها. حجم صغير مناسب للضيافة السريعة.",
-    specs: [
-      { label: "الخامة", value: "بورسلين" },
-      { label: "السعة", value: "90 مل" },
-      { label: "العناية", value: "آمن لغسالة الأطباق" }
-    ]
-  },
-  {
-    id: "art-abstract",
-    name: "تابلوه طبعة نباتية مائية",
-    cat: "art",
-    price: 950,
-    img: "assets/stock/art-abstract.jpg",
-    alt: "لوحات بألوان مائية معلقة على حائط أبيض",
-    w: 1200,
-    h: 1797,
-    featured: true,
-    desc: "طبعة بألوان مائية ناعمة داخل إطار خشبي، مناسبة لغرفة المعيشة أو المدخل. ألوانها بتفتح المكان من غير ما تشد العين.",
-    specs: [
-      { label: "المقاس", value: "40 × 50 سم" },
-      { label: "الإطار", value: "خشب طبيعي" },
-      { label: "الخامة", value: "ورق فني مطبوع" }
-    ]
-  },
-  {
-    id: "art-botanical",
-    name: "تابلوه نباتي بإطار أخضر",
-    cat: "art",
-    price: 780,
-    img: "assets/stock/art-botanical.jpg",
-    alt: "طبعات نباتية مؤطرة بإطار أخضر على حائط أخضر",
-    w: 1200,
-    h: 1540,
-    desc: "طبعة نباتية بإطار أخضر هادئ، تليق بالمساحات الفاتحة أو الجدران الجريئة. شكلها بسيط ومتوازن.",
-    specs: [
-      { label: "المقاس", value: "30 × 40 سم" },
-      { label: "الإطار", value: "خشب مطلي" },
-      { label: "الخامة", value: "ورق فني مطبوع" }
-    ]
-  },
-  {
-    id: "art-calligraphy",
-    name: "تابلوه خط عربي بإطار ذهبي",
-    cat: "art",
-    price: 1250,
-    img: "assets/stock/art-calligraphy.jpg",
-    alt: "لوحة بخط عربي مزخرف داخل إطار ذهبي",
-    w: 1200,
-    h: 1799,
-    featured: true,
-    desc: "لوحة بخط عربي بزخارف نباتية وإطار ذهبي، قطعة مميزة لجدار الاستقبال أو المكتب. تفاصيلها بتلفت النظر من غير ضوضاء.",
-    specs: [
-      { label: "المقاس", value: "50 × 70 سم" },
-      { label: "الإطار", value: "ذهبي مزخرف" },
-      { label: "الخامة", value: "طبعة فنية على قماش" }
-    ]
-  },
-  {
-    id: "tray-round",
-    name: "صينية تقديم خزف بأطباق ملونة",
-    cat: "trays",
-    price: 640,
-    img: "assets/stock/tray-round.jpg",
-    alt: "أطباق خزفية بألوان دافئة عليها فاكهة وحلوى",
-    w: 1200,
-    h: 800,
-    featured: true,
-    desc: "صينية تقديم بأطباق خزفية بألوان دافئة، للفاكهة والحلويات وضيافة العصر. ألوانها بتضيف حركة لطيفة للسفرة.",
-    specs: [
-      { label: "الخامة", value: "خزف" },
-      { label: "المقاس", value: "35 سم" },
-      { label: "العناية", value: "غسيل يدوي" }
-    ]
-  },
-  {
-    id: "tray-wood",
-    name: "صينية تقديم خشبية",
-    cat: "trays",
-    price: 890,
-    img: "assets/stock/tray-wood.jpg",
-    alt: "كوبان على صينية خشبية مع زهور بيضاء",
-    w: 1200,
-    h: 1600,
-    featured: true,
-    desc: "صينية من الخشب الطبيعي بمقاس مناسب للضيافة، فيها مساحة مريحة للأكواب والحلويات. خامة دافئة بتكمل أي طاولة.",
-    specs: [
-      { label: "الخامة", value: "خشب طبيعي" },
-      { label: "المقاس", value: "40 × 25 سم" },
-      { label: "العناية", value: "مسح بقطعة مبللة" }
-    ]
-  },
-  {
-    id: "frame-gold",
-    name: "برواز ذهبي كلاسيكي",
-    cat: "frames",
-    price: 720,
-    img: "assets/stock/frame-gold.jpg",
-    alt: "براويز ذهبية مزخرفة معلقة على حائط مع مزهرية",
-    w: 1200,
-    h: 1600,
-    desc: "برواز بزخارف ذهبية كلاسيكية، يبرز الصور العائلية واللوحات الصغيرة. تفاصيله غنية من غير ما تبقى ثقيلة.",
-    specs: [
-      { label: "المقاس", value: "20 × 30 سم" },
-      { label: "اللون", value: "ذهبي" },
-      { label: "الخامة", value: "خشب مطلي" }
-    ]
-  },
-  {
-    id: "frame-wood",
-    name: "برواز خشب عتيق",
-    cat: "frames",
-    price: 560,
-    img: "assets/stock/frame-wood.jpg",
-    alt: "برواز خشبي بمظهر عتيق بخلفية فاتحة",
-    w: 900,
-    h: 1033,
-    featured: true,
-    desc: "برواز بخشب بمظهر عتيق، مناسب لصور الذكريات والطبعات الفنية الصغيرة. لونه الدافئ بيمشي مع أي ديكور.",
-    specs: [
-      { label: "المقاس", value: "15 × 20 سم" },
-      { label: "اللون", value: "ذهبي عتيق" },
-      { label: "الخامة", value: "خشب" }
-    ]
-  }
-];
-
-const products = window.StoreData ? window.StoreData.loadProducts() : fallbackProducts;
+const products = window.StoreData ? window.StoreData.loadProducts() : [];
 
 const ICONS = {
   arrow: '<path d="M19 12H5"/><path d="m11 18-6-6 6-6"/>',
-  minus: '<path d="M5 12h14"/>',
-  plus: '<path d="M12 5v14M5 12h14"/>',
   truck: '<path d="M3 7h10v9H3z"/><path d="M13 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.7"/><circle cx="17.6" cy="18" r="1.7"/>',
   box: '<path d="m12 3 8 4.5v9L12 21l-8-4.5v-9Z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/>',
   chat: '<path d="M20 12a7.5 7.5 0 0 1-11 6.6L4 20l1.4-4.4A7.5 7.5 0 1 1 20 12Z"/>'
@@ -310,6 +91,8 @@ const footerPhone = document.getElementById("footer-phone");
 const contactWa = document.getElementById("contact-wa");
 
 const numberFormat = new Intl.NumberFormat("en-US");
+const escapeHtml = window.StoreData ? window.StoreData.escapeHtml : String;
+const isSafeImageSrc = window.StoreData ? window.StoreData.isSafeImageSrc : function () { return false; };
 
 function formatNumber(value) {
   return numberFormat.format(value);
@@ -345,15 +128,16 @@ function orderMessage(product, qty) {
 }
 
 function cardMarkup(product) {
+  const img = escapeHtml(isSafeImageSrc(product.img) ? product.img : "");
   return (
-    '<a class="product-card" href="#" data-product="' + product.id + '">' +
+    '<a class="product-card" href="#" data-product="' + escapeHtml(product.id) + '">' +
       '<span class="product-media">' +
-        '<img class="card-img" src="' + product.img + '" alt="' + product.alt + '" width="' + product.w +
-        '" height="' + product.h + '" loading="lazy" decoding="async">' +
+        '<img class="card-img" src="' + img + '" alt="' + escapeHtml(product.alt) + '" width="' + escapeHtml(product.w) +
+        '" height="' + escapeHtml(product.h) + '" loading="lazy" decoding="async">' +
       "</span>" +
       '<span class="product-body">' +
-        '<span class="product-cat">' + CATEGORIES[product.cat] + "</span>" +
-        '<span class="product-name">' + product.name + "</span>" +
+        '<span class="product-cat">' + escapeHtml(CATEGORIES[product.cat]) + "</span>" +
+        '<span class="product-name">' + escapeHtml(product.name) + "</span>" +
         '<span class="product-foot">' +
           '<span class="price"><span class="od-nowrap">' + formatNumber(product.price) +
           ' <span class="currency">ج.م</span></span></span>' +
@@ -388,7 +172,7 @@ function initCategoryMedia() {
       return product.cat === media.dataset.catMedia;
     });
 
-    if (first && img) {
+    if (first && isSafeImageSrc(first.img) && img) {
       img.src = first.img;
       img.alt = "";
       img.hidden = false;
@@ -438,6 +222,7 @@ function galleryImages(product) {
     const src = typeof entry === "string" ? entry : entry && entry.src;
     const alt = typeof entry === "string" ? product.alt : (entry && entry.alt) || product.alt;
     if (!src) return;
+    if (!isSafeImageSrc(src)) return; // مصدر مش من القائمة الآمنة → متعرضهوش
     const exists = list.some(function (item) { return item.src === src; });
     if (!exists) list.push({ src: src, alt: alt });
   });
@@ -482,7 +267,7 @@ function renderThumbs(product) {
   detailThumbs.innerHTML = gallery.map(function (item, index) {
     return '<button class="thumb" type="button" data-thumb="' + index + '" aria-pressed="' +
       (index === 0) + '" aria-label="عرض الصورة ' + (index + 1) + ' من ' + gallery.length + '">' +
-      '<img src="' + item.src + '" alt="" width="120" height="150" loading="lazy" decoding="async">' +
+      '<img src="' + escapeHtml(item.src) + '" alt="" width="120" height="150" loading="lazy" decoding="async">' +
     "</button>";
   }).join("");
 }
@@ -614,7 +399,7 @@ function openProduct(id) {
   detailDesc.textContent = product.desc;
 
   detailSpecs.innerHTML = product.specs.map(function (spec) {
-    return '<div class="spec-row"><dt>' + spec.label + "</dt><dd>" + spec.value + "</dd></div>";
+    return '<div class="spec-row"><dt>' + escapeHtml(spec.label) + "</dt><dd>" + escapeHtml(spec.value) + "</dd></div>";
   }).join("");
 
   renderQty();

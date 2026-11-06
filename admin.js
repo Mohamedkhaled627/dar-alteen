@@ -118,7 +118,6 @@ let ui = { query: "", category: "all" };
 let editingId = null;
 let draftImage = null;
 let pendingConfirm = null;
-let toastTimer = null;
 
 function formatNumber(value) {
   return numberFormat.format(value);
@@ -133,11 +132,9 @@ function normalize(text) {
     .toLowerCase();
 }
 
-function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, function (character) {
-    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character];
-  });
-}
+// escapeHtml مسماة ومشتركة من store-data.js (نفس دالة escaping لكل الموقع)
+const escapeHtml = StoreData.escapeHtml;
+const isSafeImageSrc = StoreData.isSafeImageSrc;
 
 function icon(name) {
   return '<svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + ICONS[name] + "</svg>";
@@ -399,10 +396,7 @@ function compressImage(file) {
 }
 
 function imageUrlAllowed(value) {
-  if (/^https?:\/\//i.test(value)) return true;
-  if (/^data:image\//i.test(value)) return true;
-  if (/^[a-z][a-z0-9+.-]*:/i.test(value)) return false;
-  return true;
+  return isSafeImageSrc(value);
 }
 
 function openDialog(product) {
@@ -428,7 +422,8 @@ function openDialog(product) {
   if (!specsEditor.children.length) addSpecRow("", "");
   syncSpecControls();
 
-  imageUrlInput.value = product && /^https?:\/\//i.test(product.img) ? product.img : "";
+  // رابط http مش ممكن يعدي normalizeProduct/isSafeImageSrc أصلاً — فل حقول الرابط ديمًا فارغة عند فتح الديالوج
+  imageUrlInput.value = "";
   renderImagePreview();
 
   if (!dialog.open) dialog.showModal();
@@ -480,7 +475,8 @@ function validateForm() {
 }
 
 function saveProduct(values) {
-  const base = {
+  // gate واحد للدخل: كل منتج بيمر على StoreData.normalizeProduct قبل الحفظ
+  const base = StoreData.normalizeProduct({
     id: editingId || "p-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
     name: values.name,
     cat: values.cat,
@@ -492,7 +488,9 @@ function saveProduct(values) {
     desc: values.desc,
     specs: values.specs,
     featured: featuredInput.checked
-  };
+  });
+
+  if (!base) return;
 
   let next;
   if (editingId) {
@@ -531,8 +529,6 @@ function showToast(message, isError) {
     toast.classList.remove("is-visible");
     window.setTimeout(function () { toast.remove(); }, 250);
   }, 3800);
-
-  if (toastTimer) window.clearTimeout(toastTimer);
 }
 
 function showStorageBanner() {
@@ -567,6 +563,209 @@ function deleteProduct(id) {
 
   addButton.focus();
 }
+
+/* ---------- قفل اللوحة بكلمة سر محلية (حماية UX مش سياسة سيرفر) ---------- */
+
+const AUTH_PW_KEY = "dar-alteen-admin-pw";
+const AUTH_UNLOCK_KEY = "dar-alteen-admin-unlocked";
+const MIN_PW_LENGTH = 6;
+
+const authDialog = document.getElementById("auth-dialog");
+const authTitle = document.getElementById("auth-title");
+const authError = document.getElementById("auth-error");
+const authSetup = document.getElementById("auth-setup");
+const authLogin = document.getElementById("auth-login");
+const authChange = document.getElementById("auth-change");
+
+const setupFirst = document.getElementById("auth-setup-first");
+const setupSecond = document.getElementById("auth-setup-second");
+const loginPassword = document.getElementById("auth-login-password");
+const changeCurrent = document.getElementById("auth-change-current");
+const changeFirst = document.getElementById("auth-change-first");
+const changeSecond = document.getElementById("auth-change-second");
+const changeCancel = document.getElementById("auth-change-cancel");
+
+const lockButton = document.getElementById("lock-admin");
+const changePasswordButton = document.getElementById("change-password");
+
+let authUnlocked = false;
+let adminStarted = false;
+
+function pwStore() {
+  try {
+    window.localStorage.setItem("__dar_probe__", "1");
+    window.localStorage.removeItem("__dar_probe__");
+    return window.localStorage;
+  } catch (error) {
+    // private mode → زى الكتالوج: الدخول session-only بس
+    return window.sessionStorage;
+  }
+}
+
+// الكلمة مش بتتخزن نص — hash SHA-256 بس
+function getPwHash() {
+  return pwStore().getItem(AUTH_PW_KEY);
+}
+
+function setPwHash(hash) {
+  pwStore().setItem(AUTH_PW_KEY, hash);
+}
+
+function sha256Hex(text) {
+  if (!window.crypto || !crypto.subtle) return Promise.reject(new Error("subtle"));
+  return crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function (buffer) {
+    return Array.from(new Uint8Array(buffer)).map(function (byte) {
+      return ("0" + byte.toString(16)).slice(-2);
+    }).join("");
+  });
+}
+
+function showAuthError(message) {
+  authError.textContent = message;
+  authError.hidden = false;
+}
+
+function showAuthMode(mode) {
+  authSetup.hidden = mode !== "setup";
+  authLogin.hidden = mode !== "login";
+  authChange.hidden = mode !== "change";
+  authTitle.textContent =
+    mode === "setup" ? "فرض كلمة السر" :
+    mode === "change" ? "تغيير كلمة السر" :
+    "دخول لوحة التحكم";
+  authError.hidden = true;
+
+  const first = mode === "setup" ? setupFirst : mode === "change" ? changeCurrent : loginPassword;
+  [setupFirst, setupSecond, loginPassword, changeCurrent, changeFirst, changeSecond].forEach(function (input) {
+    input.value = "";
+  });
+  if (first) first.focus();
+}
+
+function openAuth(mode) {
+  showAuthMode(mode);
+  if (!authDialog.open) authDialog.showModal();
+}
+
+function unlockAdmin() {
+  authUnlocked = true;
+  window.sessionStorage.setItem(AUTH_UNLOCK_KEY, "1");
+  if (authDialog.open) authDialog.close();
+  lockButton.hidden = false;
+  changePasswordButton.hidden = false;
+  startAdmin();
+}
+
+function lockAdmin() {
+  authUnlocked = false;
+  lockButton.hidden = true;
+  changePasswordButton.hidden = true;
+  openAuth("login");
+}
+
+authDialog.addEventListener("cancel", function (event) {
+  // ESC ميقفلش اللوحة والاحاية مقفولة
+  if (!authUnlocked) event.preventDefault();
+});
+
+authDialog.addEventListener("close", function () {
+  // قفل بالـ dialog.close() البرمجي تحت قفل → نعيد الفتح فورًا
+  if (!authUnlocked) window.setTimeout(function () { openAuth("login"); }, 50);
+});
+
+authSetup.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const first = setupFirst.value;
+  const second = setupSecond.value;
+
+  if (first.length < MIN_PW_LENGTH) { showAuthError("كلمة السر لازم تكون 6 حروف على الأقل."); return; }
+  if (first !== second) { showAuthError("التأكيد مش مطابق للكلمة الأصلية."); return; }
+  if (getPwHash()) { showAuthError("فيه كلمة سر محفوظة بالفعل — ادخل بيها أو غيّرها من جوّه."); return; }
+
+  sha256Hex(first).then(function (hash) {
+    setPwHash(hash);
+    unlockAdmin();
+    showToast("تم فرض كلمة السر. مش هيتسأل عنها تاني طول التاب.");
+  }, function () {
+    showAuthError("المتصفح مش بيدعم التشفير المطلوب. جرّب متصفح حديث أو افتح الصفحة على https.");
+  });
+});
+
+authLogin.addEventListener("submit", function (event) {
+  event.preventDefault();
+  const stored = getPwHash();
+
+  if (!stored) { showAuthError("حصل خطأ — جرّب تحمّل الصفحة تاني."); return; }
+
+  sha256Hex(loginPassword.value).then(function (hash) {
+    if (hash !== stored) {
+      showAuthError("كلمة السر مش صحيحة.");
+      loginPassword.select();
+      return;
+    }
+    unlockAdmin();
+  }, function () {
+    showAuthError("المتصفح مش بيدعم التشفير المطلوب. جرّب متصفح حديث أو افتح الصفحة على https.");
+  });
+});
+
+authChange.addEventListener("submit", async function (event) {
+  event.preventDefault();
+  const current = changeCurrent.value;
+  const first = changeFirst.value;
+  const second = changeSecond.value;
+
+  const currentHash = await sha256Hex(current).catch(function () { return null; });
+
+  if (!currentHash || currentHash !== String(getPwHash() || "")) {
+    showAuthError("كلمة السر الحالية مش صحيحة.");
+    changeCurrent.select();
+    return;
+  }
+  if (first.length < MIN_PW_LENGTH) { showAuthError("كلمة السر الجديدة لازم تكون 6 حروف على الأقل."); return; }
+  if (first !== second) { showAuthError("التأكيد مش مطابق للكلمة الجديدة."); return; }
+
+  const newHash = await sha256Hex(first).catch(function () { return null; });
+  if (!newHash) { showAuthError("المتصفح مش بيدعم التشفير المطلوب."); return; }
+
+  setPwHash(newHash);
+  authDialog.close();
+  showToast("تم تغيير كلمة السر.");
+});
+
+changeCancel.addEventListener("click", function () {
+  authDialog.close();
+});
+
+lockButton.addEventListener("click", lockAdmin);
+
+changePasswordButton.addEventListener("click", function () {
+  openAuth("change");
+});
+
+function startAdmin() {
+  if (adminStarted) return; // امنع البدء المزدوج
+  adminStarted = true;
+  if (!StoreData.storageAvailable()) showStorageBanner();
+  render();
+}
+
+function initAuth() {
+  const stored = getPwHash();
+
+  if (stored && window.sessionStorage.getItem(AUTH_UNLOCK_KEY) === "1") {
+    authUnlocked = true;
+    lockButton.hidden = false;
+    changePasswordButton.hidden = false;
+    startAdmin();
+    return;
+  }
+
+  openAuth(stored ? "login" : "setup");
+}
+
+initAuth();
 
 function resetFilters() {
   ui.query = "";
@@ -737,7 +936,7 @@ imageUrlInput.addEventListener("change", async function () {
   if (!value) return;
 
   if (!imageUrlAllowed(value)) {
-    setError("image", "اكتب رابط صورة يبدأ بـ https:// أو مسار صورة داخل المشروع.");
+    setError("image", "الرابط مرفوض. استخدم مسار صورة داخل المشروع (زي assets/stock/...) أو ارفع صورة من الجهاز.");
     return;
   }
 
@@ -809,8 +1008,3 @@ resetButton.addEventListener("click", function () {
   );
 });
 
-if (!StoreData.storageAvailable()) {
-  showStorageBanner();
-}
-
-render();

@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <title>لوحة التحكم — دار الطين</title>
 <meta name="description" content="لوحة تحكم بائع دار الطين: إضافة وتعديل منتجات المتجر بصور وأسعار وتفاصيل، مع معاينة مباشرة.">
 <meta name="theme-color" content="#F1F2EE">
@@ -86,6 +87,14 @@
       <button class="btn btn-ghost btn-sm" id="reset-catalog" type="button" aria-label="استرجاع المنتجات الأصلية">
         <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 4v5h5"/><path d="M4.6 13a8 8 0 1 0 1.9-6.4L4 9"/></svg>
         <span class="btn-label">استرجاع الأصلي</span>
+      </button>
+      <button class="btn btn-ghost btn-sm" id="change-password" type="button" hidden>
+        <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <span class="btn-label">تغيير كلمة السر</span>
+      </button>
+      <button class="btn btn-outline btn-sm" id="lock-admin" type="button" aria-label="قفل لوحة التحكم">
+        <svg class="od-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14v3"/></svg>
+        <span class="btn-label">قفل</span>
       </button>
     </div>
   </div>
@@ -288,6 +297,59 @@
       <button class="btn btn-primary" type="submit" id="save-product">حفظ المنتج</button>
     </div>
   </form>
+</dialog>
+
+<dialog id="auth-dialog" class="admin-dialog auth-dialog" aria-labelledby="auth-title" aria-describedby="auth-error">
+  <div class="auth-body">
+    <p class="eyebrow">دار الطين</p>
+    <h2 id="auth-title">دخول لوحة التحكم</h2>
+
+    <form id="auth-setup" hidden novalidate>
+      <p class="field-hint">أول مرة بتفتح اللوحة؟ فرض كلمة سر تحمي منتجاتك لو حد فتح المتصفح على جهازك. الكلمة بتتخزن hash مش بنصها.</p>
+      <label class="field" for="auth-setup-first">
+        <span class="field-label">كلمة السر <em class="req">مطلوبة</em></span>
+        <input id="auth-setup-first" type="password" autocomplete="new-password" aria-describedby="auth-error">
+      </label>
+      <label class="field" for="auth-setup-second">
+        <span class="field-label">تأكيد كلمة السر <em class="req">مطلوب</em></span>
+        <input id="auth-setup-second" type="password" autocomplete="new-password" aria-describedby="auth-error">
+      </label>
+      <div class="dialog-actions">
+        <button class="btn btn-primary" type="submit">احفظ الكلمة وافتح اللوحة</button>
+      </div>
+    </form>
+
+    <form id="auth-login" hidden novalidate>
+      <label class="field" for="auth-login-password">
+        <span class="field-label">كلمة السر <em class="req">مطلوبة</em></span>
+        <input id="auth-login-password" type="password" autocomplete="current-password" aria-describedby="auth-error">
+      </label>
+      <div class="dialog-actions">
+        <button class="btn btn-primary" type="submit">افتح اللوحة</button>
+      </div>
+    </form>
+
+    <form id="auth-change" hidden novalidate>
+      <label class="field" for="auth-change-current">
+        <span class="field-label">كلمة السر الحالية <em class="req">مطلوبة</em></span>
+        <input id="auth-change-current" type="password" autocomplete="current-password" aria-describedby="auth-error">
+      </label>
+      <label class="field" for="auth-change-first">
+        <span class="field-label">كلمة السر الجديدة <em class="req">مطلوبة</em></span>
+        <input id="auth-change-first" type="password" autocomplete="new-password" aria-describedby="auth-error">
+      </label>
+      <label class="field" for="auth-change-second">
+        <span class="field-label">تأكيد الكلمة الجديدة <em class="req">مطلوب</em></span>
+        <input id="auth-change-second" type="password" autocomplete="new-password" aria-describedby="auth-error">
+      </label>
+      <div class="dialog-actions">
+        <button class="btn btn-outline" type="button" id="auth-change-cancel">إلغاء</button>
+        <button class="btn btn-primary" type="submit">غيّر الكلمة</button>
+      </div>
+    </form>
+
+    <p class="field-error" id="auth-error" role="alert" hidden></p>
+  </div>
 </dialog>
 
 <dialog id="confirm-dialog" class="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-message">

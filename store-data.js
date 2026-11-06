@@ -295,6 +295,23 @@
     }
   ];
 
+  // دالة escape مشتركة — كل innerHTML بيمر عليها قبل ما يتكتب
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, function (character) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character];
+    });
+  }
+
+  // قائمة آمنة لمصادر الصور: data:image (jpeg/png/webp فقط) أو مسار محلي (مشتري scheme)
+  // أي scheme تاني (http: و javascript: و data:image/svg+xml...) مرفوض
+  function isSafeImageSrc(value) {
+    var src = String(value || "").trim();
+    if (!src) return false;
+    if (/^data:image\/(jpeg|png|webp);base64,/i.test(src)) return true;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(src)) return false; // أي scheme آخر مرفوض
+    return true; // مسار نسبي (assets/stock/...)
+  }
+
   function clone(value) {
     return JSON.parse(JSON.stringify(value));
   }
@@ -307,6 +324,9 @@
     var img = String(product.img || "").trim();
 
     if (!name || !img || !Number.isFinite(price) || price <= 0) return null;
+
+    // gate أمان: مصدر الصورة لازم يبقى من القائمة الآمنة
+    if (!isSafeImageSrc(img)) return null;
 
     var cat = CATEGORIES[product.cat] ? product.cat : "mugs";
 
@@ -384,9 +404,11 @@
   }
 
   window.StoreData = {
-    STORAGE_KEY: STORAGE_KEY,
     CATEGORIES: CATEGORIES,
     DEFAULT_PRODUCTS: DEFAULT_PRODUCTS,
+    normalizeProduct: normalizeProduct,
+    escapeHtml: escapeHtml,
+    isSafeImageSrc: isSafeImageSrc,
     loadProducts: loadProducts,
     saveProducts: saveProducts,
     resetProducts: resetProducts,

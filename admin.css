@@ -961,3 +961,26 @@ label.upload-btn {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* ---------- lock screen (auth-dialog) ---------- ---------- ---------- */
+.auth-dialog {
+  max-width: 380px;
+  width: calc(100vw - 32px);
+}
+
+.auth-dialog h2 {
+  margin: 4px 0 16px;
+}
+
+.auth-dialog .field {
+  margin-block-end: 12px;
+}
+
+.auth-dialog .field-hint {
+  margin: 0 0 14px;
+}
+
+.auth-dialog .dialog-actions {
+  margin-block-start: 6px;
+}
+
