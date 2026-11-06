@@ -39,6 +39,7 @@ const searchEl = document.getElementById("admin-search");
 const categoryFilterEl = document.getElementById("admin-category");
 const addButton = document.getElementById("add-product");
 const resetButton = document.getElementById("reset-catalog");
+const exportButton = document.getElementById("export-catalog");
 const storageBanner = document.getElementById("storage-banner");
 
 const statCount = document.getElementById("stat-count");
@@ -985,10 +986,29 @@ form.addEventListener("submit", async function (event) {
   }
 });
 
+// نشر للزوار: تنزيل catalog.json بآخر نسخة الكتالوج — المستخدم يحطه في فولدر الموقع ويعمل نشر
+exportButton.addEventListener("click", function () {
+  var payload = {
+    version: Date.now(),
+    generated: new Date().toISOString(),
+    products: catalog
+  };
+  var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  var url = URL.createObjectURL(blob);
+  var link = document.createElement("a");
+  link.href = url;
+  link.download = "catalog.json";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  showToast("نزّلت catalog.json — حطه في فولدر الموقع وشغّل publish.ps1 (أو اطلب النشر).");
+});
+
 resetButton.addEventListener("click", function () {
   askConfirm(
     "استرجاع المنتجات الأصلية",
-    "هتستبدل كل التعديلات والمنتجات المضافة بالمنتجات الأصلية الـ13.",
+    "هتستبدل كل التعديلات والمنتجات المضافة بالمنتجات الأصلية الـ17.",
     "استرجع الأصلي",
     function () {
       StoreData.resetProducts();

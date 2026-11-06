@@ -355,8 +355,39 @@
     };
   }
 
-  function readSaved() {
+  var VERSION_KEY = STORAGE_KEY.replace(/-v\d+$/, "-published-version");
+
+  function readVersion() {
+    try { return Number(window.localStorage.getItem(VERSION_KEY)) || 0; } catch (error) { return 0; }
+  }
+
+  function writeVersion(value) {
+    try { window.localStorage.setItem(VERSION_KEY, String(value)); } catch (error) { /* تجاهَل — الحفظ الافتراضي كفاية */ }
+  }
+
+  // المكتالوج المنشور readPublished: XHR متزامن على ملف صغير محلي أثناء فتح الصفحة
+  // عشان يفضل loadProducts متزامن بلا رفع دولة الرندر — shortcut: يفشل على file:// وقايم الخدمة محلية.
+  function readPublished() {
     try {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "catalog.json", false);
+      xhr.send(null);
+      if (xhr.status !== 200) return null;
+      var parsed = JSON.parse(xhr.responseText);
+      var raw = Array.isArray(parsed) ? parsed : parsed && Array.isArray(parsed.products) ? parsed.products : null;
+      if (!raw) return null;
+      var list = raw
+        .map(normalizeProduct)
+        .filter(function (product) { return product !== null; });
+      if (!list.length) return null;
+      return { version: Number(parsed.version) || 0, products: list };
+    } catch (error) {
+      return null; // file:// أو مفيش ملف — fallback طبيعي لتحت
+    }
+  }
+
+  function readSaved() {
+      try {
       var raw = window.localStorage.getItem(STORAGE_KEY);
       if (!raw) return null;
       var parsed = JSON.parse(raw);
@@ -371,6 +402,13 @@
 
   function loadProducts() {
     var saved = readSaved();
+    var published = readPublished();
+    // المكتالوج المنشور يفوز لو أحدث — فرضا والمكة حق لـ نسخة أقدم زيارات مش يفسد شرايين الكتالوج الاسمي للمتسوقعون
+    if (published && published.version > readVersion()) {
+      writeVersion(published.version);
+      saveProducts(published.products);
+      return published.products;
+    }
     return saved !== null ? saved : clone(DEFAULT_PRODUCTS);
   }
 
@@ -412,6 +450,7 @@
     loadProducts: loadProducts,
     saveProducts: saveProducts,
     resetProducts: resetProducts,
-    storageAvailable: storageAvailable
+    storageAvailable: storageAvailable,
+    readPublished: readPublished
   };
 })();
